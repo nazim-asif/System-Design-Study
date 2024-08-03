@@ -4,7 +4,8 @@ Concurrency control mechanisms provide us with various concepts & implementation
 
 ### Types of Concurrency Control Mechanisms
 
-1. Pessimistic Concurrency Control (PCC):Pessimistic Concurrency Control (PCC) is a type of concurrency control mechanism that assumes conflicts between transactions are likely to occur and thus prevents these conflicts by locking resources before they are accessed. PCC ensures data integrity and consistency by preventing other transactions from accessing data that is currently being processed.
+#### Pessimistic Concurrency Control (PCC):
+Pessimistic Concurrency Control (PCC) is a type of concurrency control mechanism that assumes conflicts between transactions are likely to occur and thus prevents these conflicts by locking resources before they are accessed. PCC ensures data integrity and consistency by preventing other transactions from accessing data that is currently being processed.
 
 #### . . . . Operations
 
@@ -45,7 +46,7 @@ Concurrency control mechanisms provide us with various concepts & implementation
 - Once a lock is released, the transaction cannot acquire any more locks.
 
 
-## Optimistic Concurrency Control (OCC)
+#### Optimistic Concurrency Control (OCC)
 
 Optimistic Concurrency Control (OCC) is a concurrency control method used in database systems that assumes conflicts between transactions are rare. Instead of using locks to prevent conflicts, OCC allows transactions to execute without restrictions and only checks for conflicts at the time of transaction commit. If a conflict is detected, one or more transactions are rolled back and retried. This approach can lead to higher concurrency and better performance in environments where conflicts are infrequent.
 
