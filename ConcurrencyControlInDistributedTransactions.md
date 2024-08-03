@@ -9,19 +9,19 @@ Pessimistic Concurrency Control (PCC) is a type of concurrency control mechanism
 
 #### . . . . Operations
 
-1. Lock Acquisition:
+1. **Lock Acquisition:**
 
 - When a transaction needs to read or write a data item, it must first acquire the appropriate lock.
 
 - If the lock is already held by another transaction, the requesting transaction is blocked until the lock is released.
 
-2. Conflict Resolution:
+2. **Conflict Resolution:**
 
 - PCC handles conflicts by blocking transactions that request locks on data items already locked by other transactions.
 
 - Deadlocks can occur if transactions wait indefinitely for locks. Deadlock detection and resolution mechanisms, such as timeout or wait-for graph analysis, are used to handle this.
 
-3. Lock Release:
+3. **Lock Release:**
 
 - Locks are typically released when the transaction commits or aborts.
 - In strict 2PL, all locks are held until the transaction commits, ensuring that no other transaction can see intermediate states.
@@ -29,17 +29,17 @@ Pessimistic Concurrency Control (PCC) is a type of concurrency control mechanism
 
 #### Operation of Two-Phase Locking
 
-1. Growing Phase:
+1. **Growing Phase:**
 
 - During the growing phase, a transaction requests the locks it needs. If a requested lock is available, it is granted. If not, the transaction waits until the lock can be obtained.
 
 - The transaction continues to acquire locks until it reaches the point where it no longer needs any additional locks.
 
-2. Lock Point:
+2. **Lock Point:**
 
 - The point in the execution of a transaction at which it has acquired all the locks it will ever need. After this point, the transaction will not request any more locks.
 
-3. Shrinking Phase:
+3. **Shrinking Phase:**
 
 - After reaching the lock point, the transaction begins to release its locks as it finishes its operations on the data items.
 
@@ -52,21 +52,21 @@ Optimistic Concurrency Control (OCC) is a concurrency control method used in dat
 
 #### . . . . Operation of Optimistic Concurrency Control
 
-1. Read Phase:
+1. **Read Phase:**
 - The transaction reads data items from the database.
 - All read and write operations are performed on a private workspace or local copies of the data items.
 - No locks are acquired on the data items, which allows multiple transactions to read and perform operations concurrently without waiting for locks.
 
-2. Validation Phase:
+2. **Validation Phase:**
 
-### Actions:
+##### Actions:
 - Before committing, the transaction checks if there have been any conflicts with other transactions.
 - The transaction maintains three sets of data items:
   - Read Set (RS): The set of data items read by the transaction.
   - Write Set (WS): The set of data items written by the transaction.
   - Validation Set (VS): The set of data items validated by the transaction.
-  
-### Validation Process:
+
+##### Validation Process:
 
 - **Timestamp Assignment:** Each transaction is assigned a unique timestamp when it enters the validation phase.
 - **Conflict Check:** The transaction checks for conflicts with other transactions that have committed since it started. This typically involves:
@@ -74,7 +74,7 @@ Optimistic Concurrency Control (OCC) is a concurrency control method used in dat
   - Ensuring that no other transactions have read any data items in its write set (WS) before it commits.
 
 
-### Write Phase:
+3. **Write Phase:**
 
 - If validation is successful (no conflicts detected), the transaction proceeds to commit its changes.
 - The changes from the private workspace or local copies are written to the database.
@@ -84,7 +84,7 @@ Optimistic Concurrency Control (OCC) is a concurrency control method used in dat
 
 The Two-Phase Commit (2PC) protocol is a distributed algorithm used to ensure all nodes in a distributed system agree on the outcome of a transaction. It is designed to maintain the ACID properties of transactions across multiple databases or services. The protocol consists of two phases: the prepare phase and the commit phase.
 
-#### . . . .  Key Components
+#### . . . . Key Components
 
 1. **Coordinator:** the node or process that manages the transaction and coordinates the commit process across all participating nodes (participants).
 2. **Participants:** The nodes or processes that execute parts of the transaction and participate in the commit process.
@@ -120,22 +120,22 @@ A transaction involves two databases, DB1 and DB2, coordinated by a transaction 
 ##### 1. Prepare Phase:
 
   - Coordinator: Sends "prepare" message to DB1 and DB2.
-  - DB1:
+  - **DB1:**
     - Receives "prepare" message.
     - Checks if it can commit the transaction (e.g., locks necessary data, ensures no conflicts).
     - Sends "vote-commit" to the coordinator if it can commit, otherwise sends "vote-abort."
-  - DB2:
+  - **DB2:**
     - Receives "prepare" message.
     - Checks if it can commit the transaction.
     - Sends "vote-commit" to the coordinator if it can commit, otherwise sends "vote-abort."
 
 ##### 2. Commit Phase:
-  - Coordinator: 
+  - **Coordinator:** 
    - Receives votes from DB1 and DB2.
    - If both votes are "commit," sends "commit" message to DB1 and DB2.
    - If any vote is "abort," sends "abort" message to DB1 and DB2.
 
-  - DB1 and DB2:
+  - **DB1 and DB2:**
     - Receive the "commit" or "abort" message.
     - If "commit," both DB1 and DB2 commit the transaction.
     - If "abort," both DB1 and DB2 roll back the transaction.
