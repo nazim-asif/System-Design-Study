@@ -26,8 +26,11 @@ Pessimistic Concurrency Control (PCC) is a type of concurrency control mechanism
 - Locks are typically released when the transaction commits or aborts.
 - In strict 2PL, all locks are held until the transaction commits, ensuring that no other transaction can see intermediate states.
 
+### Pessimistic Concurrency Control Methods
 
-#### Operation of Two-Phase Locking
+Following are the four Pessimistic Concurrency Control Methods:
+
+#### 1. Operation of Two-Phase Locking
 
 1. **Growing Phase:**
 
@@ -45,6 +48,16 @@ Pessimistic Concurrency Control (PCC) is a type of concurrency control mechanism
 
 - Once a lock is released, the transaction cannot acquire any more locks.
 
+#### 2. ACID ISOLATION LEVEL
+
+#### 3. Distributed Lock Manager (DLM):
+
+- The DLM is responsible for managing locks across a distributed system. It ensures that locks are granted and released in a way that prevents conflicts and ensures data consistency.
+- The DLM can be centralized (a single node managing all locks) or decentralized (locks managed by multiple nodes, often in a coordinated manner).
+
+#### 4. Multiple Granularity Lock
+
+A lock can be acquired at various granular level like: table level, row/record level, page level or any other resource’s level. In transaction system a transaction can lock a whole table, or a specific row while performing some changes on it. This lock acquiring when done by various transactions simultaneously, this phenomena is called as multiple granularity locking.
 
 #### Optimistic Concurrency Control (OCC)
 
@@ -79,6 +92,24 @@ Optimistic Concurrency Control (OCC) is a concurrency control method used in dat
 - If validation is successful (no conflicts detected), the transaction proceeds to commit its changes.
 - The changes from the private workspace or local copies are written to the database.
 - If validation fails (conflict detected), the transaction is rolled back, and its changes are discarded. The transaction may be retried.
+
+
+### Optimistic Concurrency Control Methods
+
+#### 1. Timestamp Based (OCC)
+
+In a timestamp based concurrency technique, each transaction in the system is assigned a unique timestamp which is taken as soon as the transaction begins, and its verified again during the commit phase. If there’s new updated timestamp from a different transaction then based on some policy defined by the System Adminstrator the transaction will either be restarted or aborted. But if the times stamp is same & never modified by any other transaction then it will be committed.
+
+#### 2. Multi-Version Concurrency Control (MVCC)
+
+In MVCC, every data item has multiple versions of itself. When a transaction starts, it reads the version that is valid at the start of the transaction. And when the transaction writes, it creates a new version of that specific data item. That way, every transaction can concurrently perform their operations.
+
+#### 3. Snapshot Isolation
+Snapshot isolation is basically a snapshot stored in an isolated manner when our database system was purely consistent. And this snapshot is read by the transactions at the beginning. Transaction ensures that the data item is not changed while it was executing operations on it. Snapshot isolation is achieved through OCC & MVCC techniques.
+
+#### 4. Conflict Free Replicated Data Types (CRDTs)
+
+CRDTs is a data structure technique which allows a transaction to perform all its operation and replicate the data to some other node or current node. After all the operations are performed, this technique offers us with merging methods that allows us to merge the data across distributed nodes (conflict-free) and eventually achieving consistent state (eventually consistent property).
 
 ## Two-Phase Commit (2PC)
 
