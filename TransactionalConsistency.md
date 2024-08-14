@@ -129,3 +129,76 @@ For example, considering the following two interconnected but independent servic
 5. The Order service updates its payment record as ‘payment_failed’, sends the alternate payment links to the user.
 6. Steps 3 and 4 are carried out again when the user retries the payment. And upon successful completion of the payment, the Payment service updates its details as ‘payment_complete’ and sends another message with the updates to the Order service.
 7. The Order service updates its record as ‘payment_complete’.
+
+
+# Saga pattern
+
+The Saga pattern is a design pattern used to manage distributed transactions in microservices architectures. Unlike traditional monolithic applications where a single transaction can span multiple operations, in microservices, each service typically manages its own database. This makes it challenging to maintain data consistency across multiple services when a single business process spans several microservices.
+
+### . . . . What is the Saga Pattern?
+
+The Saga pattern breaks down a large transaction that spans multiple services into a series of smaller, independent transactions. Each of these transactions updates the state of a single service and publishes an event or message to trigger the next transaction. If something goes wrong, compensating transactions (also called "rollback operations") are used to undo the effects of previous transactions.
+
+### . . . . Key Concepts of the Saga Pattern:
+
+1. **Distributed Transactions:** A saga is a sequence of transactions that are distributed across multiple services. Each transaction updates data within a single service and triggers the next transaction in the sequence.
+   
+2. **Compensating Transactions:** If a step in the saga fails, the system doesn't roll back the entire transaction like in traditional database transactions. Instead, it performs compensating transactions to undo the changes made by previous transactions in the saga.
+
+3. **Event-Driven:** The saga pattern is often event-driven, where each transaction in the sequence triggers an event that starts the next transaction. This makes the pattern highly decoupled and scalable.
+
+4. **Long-Running Processes:** Sagas are designed to handle long-running processes where each step may take significant time, making it impractical to hold locks on resources (as would be done in a traditional ACID transaction).
+
+### Types of Saga Patterns
+
+1. **Choreography (Event-Based) Saga:** In a choreography-based saga, each service involved in the saga listens for events and reacts by performing its own transaction and then emitting its own event. There is no central coordinator.
+
+- **Pros:**
+  - Decentralized and scalable.
+  - Each service is loosely coupled, only needing to know about the events it subscribes to.
+- **Cons:**
+  - Complexity increases with the number of services involved.
+  - Harder to manage and troubleshoot, as the flow of transactions is distributed across multiple services.
+
+- **Example Workflow:**
+
+1. **Order Service:** Places an order and emits an "Order Created" event.
+2. **Payment Service:** Listens for "Order Created," processes the payment, and emits a "Payment Completed" event.
+3. **Inventory Service:** Listens for "Payment Completed," updates the inventory, and emits an "Inventory Updated" event.
+4. **Shipping Service:** Listens for "Inventory Updated," arranges the shipment, and emits a "Shipment Created" event.
+If any step fails, the corresponding service emits a compensating event to undo the action, such as refunding the payment.
+
+2. **Orchestration (Centralized) Saga:** In an orchestration-based saga, a central orchestrator service is responsible for managing the workflow. The orchestrator sends commands to each service involved and handles the saga's flow, including compensations if needed.
+- **Pros:**
+   - Centralized control, making the saga easier to manage and debug.
+   - Clear visibility into the flow of the saga.
+- **Cons:**
+   - The orchestrator can become a bottleneck or a single point of failure.
+   - The orchestrator needs to have knowledge of all the steps in the saga, leading to tighter coupling.
+
+- **Example Workflow:**
+
+1. **Order Service:** Sends a "Create Order" command to the orchestrator.
+2. **Orchestrator Service:** Sends a "Process Payment" command to the Payment Service.
+3. **Payment Service:** Processes the payment and sends a "Payment Completed" message back to the orchestrator.
+4. **Orchestrator Service:** Sends an "Update Inventory" command to the Inventory Service.
+5. **Inventory Service:** Updates the inventory and sends a confirmation back to the orchestrator.
+6. **Orchestrator Service:** Sends a "Create Shipment" command to the Shipping Service.
+If a step fails, the orchestrator issues compensating commands to undo previous steps.
+
+### Advantages of the Saga Pattern
+
+1. **Scalability:** Services can operate independently, improving the scalability of the system.
+2. **Resilience:** By using compensating transactions, the system can gracefully handle failures without rolling back the entire process.
+3. **Flexibility:** Different services can be developed, deployed, and scaled independently.
+
+### Challenges of the Saga Pattern
+
+1. **Complexity:** Managing distributed transactions, especially compensating transactions, can be complex.
+2. **Data Consistency:** Ensuring eventual consistency rather than strong consistency can be challenging, especially when services need to rely on outdated information until the saga completes.
+3. **Failure Handling:** Designing effective compensating transactions and ensuring they can handle all potential failure scenarios requires careful planning.
+
+### Use Cases for the Saga Pattern
+1. **Order Processing:** In e-commerce, where an order might involve payment processing, inventory updates, and shipment scheduling.
+2. **Booking Systems:** Like travel booking, where a single booking might involve reserving flights, hotels, and cars.
+3. **Microservices Architecture:** Where different services handle different parts of a business transaction, and maintaining consistency across these services is critical.
