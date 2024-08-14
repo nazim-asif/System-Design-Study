@@ -202,3 +202,5 @@ If a step fails, the orchestrator issues compensating commands to undo previous 
 1. **Order Processing:** In e-commerce, where an order might involve payment processing, inventory updates, and shipment scheduling.
 2. **Booking Systems:** Like travel booking, where a single booking might involve reserving flights, hotels, and cars.
 3. **Microservices Architecture:** Where different services handle different parts of a business transaction, and maintaining consistency across these services is critical.
+
+*** Difference between 2pc and saga is 2PC is synchronous in nature where SAGA is asynchronous in nature. 
