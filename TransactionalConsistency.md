@@ -96,6 +96,20 @@ The CAP theorem simplifies the complexity of distributed systems into three prop
 2. ***Performance Needs:*** Strict consistency can slow down the system because of the need to coordinate across nodes, reducing performance and availability.
 3. ***Dynamic Requirements:*** Systems often need to adapt to changing network conditions and varying levels of consistency.
 
+# PACELC Theorem
+
+The PACELC Theorem (pronounced "pass-elk"), proposed by Daniel J. Abadi, builds on the CAP Theorem by considering the trade-offs not just during partitions but also in the absence of partitions. It states:
+
+- PAC: During a Partition, you must choose between Availability and Consistency (as per CAP).
+- ELC: Even when there is no partition (the network is operating normally), you must choose between Latency and Consistency.
+
+So, PACELC describes the trade-offs in two scenarios:
+
+- During Partition (PAC): You must choose between Availability and Consistency.
+- Else (ELC): When there is no partition, you must choose between reducing Latency or ensuring Consistency.
+
+
+
 
 # BASE
 
